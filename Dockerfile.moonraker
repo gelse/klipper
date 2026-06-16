@@ -29,7 +29,10 @@ ARG GID=1000
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libjpeg62-turbo \
     libv4l-0 \
+    libsodium23 \
+    iproute2 \
     curl \
+    git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

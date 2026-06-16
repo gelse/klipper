@@ -11,6 +11,7 @@ services:
     privileged: true
     volumes:
       - ${CONFIG_PATH:-./klipper_config}:/home/klipper/.config:ro
+      - ${GCODE_PATH:-./gcode}:/home/klipper/gcodes
       - ${SOCKETS_PATH:-./sockets}:/tmp
     devices:
       - ${SERIAL_DEVICE:-/dev/null}:${SERIAL_DEVICE:-/dev/null}
