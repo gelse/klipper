@@ -1,0 +1,61 @@
+services:
+  klipper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    container_name: klipper
+    restart: unless-stopped
+    privileged: true
+    volumes:
+      - ${CONFIG_PATH:-./klipper_config}:/home/klipper/.config:ro
+      - ${SOCKETS_PATH:-./sockets}:/tmp
+    devices:
+      - ${SERIAL_DEVICE:-/dev/null}:${SERIAL_DEVICE:-/dev/null}
+    environment:
+      TZ: ${TZ:-UTC}
+    logging:
+      driver: local
+
+  moonraker:
+    build:
+      context: .
+      dockerfile: Dockerfile.moonraker
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        MOONRAKER_VERSION: ${MOONRAKER_VERSION:-master}
+    container_name: moonraker
+    restart: unless-stopped
+    volumes:
+      - ${MOONRAKER_DATA_PATH:-./moonraker_data}:/home/moonraker/moonraker_data
+      - ${SOCKETS_PATH:-./sockets}:/tmp
+    ports:
+      - "7125:7125"
+    environment:
+      TZ: ${TZ:-UTC}
+    depends_on:
+      klipper:
+        condition: service_started
+    logging:
+      driver: local
+
+  fluidd:
+    build:
+      context: .
+      dockerfile: Dockerfile.fluidd
+      args:
+        FLUIDD_VERSION: ${FLUIDD_VERSION:-master}
+    container_name: fluidd
+    restart: unless-stopped
+    ports:
+      - "${FLUIDD_PORT:-80}:80"
+    environment:
+      TZ: ${TZ:-UTC}
+    depends_on:
+      moonraker:
+        condition: service_started
+    logging:
+      driver: local

@@ -4,3 +4,11 @@ out
 .config
 .config.old
 klippy/.version
+
+# Docker environment
+.env
+klipper_config/
+logs/
+moonraker_data/
+gcode/
+sockets/

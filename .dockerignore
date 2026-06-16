@@ -1,0 +1,33 @@
+# Build output
+out/
+*.so
+*.pyc
+
+# Git
+.git/
+.gitignore
+.github/
+
+# Configs
+.config
+.config.old
+
+# Docker files
+.env
+.env.example
+docker-compose.yml
+.dockerignore
+Dockerfile*
+
+# Logs and data
+klipper_config/
+logs/
+moonraker_data/
+gcode/
+sockets/
+
+# Tests
+test/
+
+# Docs
+docs/
