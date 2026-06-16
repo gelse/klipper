@@ -42,7 +42,7 @@ RUN groupadd --gid "${GID}" moonraker \
 COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /opt/moonraker /opt/moonraker
 
-RUN mkdir -p /home/moonraker/moonraker_data /home/moonraker/logs \
+RUN mkdir -p /home/moonraker/printer_data /home/moonraker/printer_data/config /home/moonraker/printer_data/logs \
     && chown -R moonraker:moonraker /home/moonraker /opt/moonraker /opt/venv
 
 USER moonraker
@@ -51,4 +51,4 @@ WORKDIR /opt/moonraker
 EXPOSE 7125
 
 ENTRYPOINT ["/opt/venv/bin/python"]
-CMD ["/opt/moonraker/moonraker/moonraker.py", "-c", "/home/moonraker/moonraker_data/moonraker.conf"]
+CMD ["/opt/moonraker/moonraker/moonraker.py", "-d", "/home/moonraker/printer_data"]
