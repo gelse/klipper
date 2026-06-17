@@ -1,0 +1,26 @@
+FROM python:3.12-slim-bookworm
+
+ARG UID=1000
+ARG GID=1000
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libjpeg62-turbo \
+    libsodium23 \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd --gid "${GID}" moonraker \
+    && useradd --uid "${UID}" --gid "${GID}" --create-home --shell /bin/bash moonraker
+
+RUN git clone --depth 1 \
+    https://github.com/TheSpaghettiDetective/moonraker-obico.git /opt/moonraker-obico \
+    && python3 -m venv /opt/obico-venv \
+    && /opt/obico-venv/bin/pip install --no-cache-dir -r /opt/moonraker-obico/requirements.txt \
+    && chown -R moonraker:moonraker /opt/moonraker-obico /opt/obico-venv
+
+USER moonraker
+WORKDIR /opt/moonraker-obico
+
+ENTRYPOINT ["/opt/obico-venv/bin/python3"]
+CMD ["-m", "moonraker_obico.app", "-c", "/home/moonraker/printer_data/config/moonraker-obico.cfg"]

@@ -71,6 +71,29 @@ services:
     logging:
       driver: local
 
+  obico:
+    build:
+      context: .
+      dockerfile: Dockerfile.obico
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    container_name: obico
+    restart: unless-stopped
+    volumes:
+      - ${MOONRAKER_DATA_PATH:-./moonraker_data}:/home/moonraker/printer_data
+      - ${GCODE_PATH:-./gcode}:/home/moonraker/printer_data/gcodes
+    environment:
+      TZ: ${TZ:-UTC}
+    depends_on:
+      moonraker:
+        condition: service_started
+    networks:
+      - default
+      - traefik
+    logging:
+      driver: local
+
 networks:
   traefik:
     external: true
