@@ -24,7 +24,7 @@ RUN groupadd --gid "${GID}" klipper \
     && useradd --uid "${UID}" --gid "${GID}" --create-home --shell /bin/bash klipper \
     && adduser klipper dialout 2>/dev/null || true
 
-RUN mkdir -p /opt/klipper /home/klipper/.config && chown -R klipper:klipper /home/klipper /opt/klipper
+RUN mkdir -p /opt/klipper /home/moonraker/printer_data/config && chown -R klipper:klipper /home/klipper /opt/klipper
 
 COPY --chown=klipper:klipper . /opt/klipper/
 
@@ -36,9 +36,9 @@ ENV PYTHONDIR=/home/klipper/klippy-env
 RUN python3 -m venv "${PYTHONDIR}" \
     && "${PYTHONDIR}/bin/pip" install --no-cache-dir -r scripts/klippy-requirements.txt
 
-VOLUME ["/home/klipper/.config"]
+VOLUME ["/home/moonraker/printer_data/config"]
 EXPOSE 7125
 
 ENTRYPOINT ["/home/klipper/klippy-env/bin/python"]
 CMD ["/opt/klipper/klippy/klippy.py", "-I", "/tmp/printer", "-a", "/tmp/klippy_uds", \
-     "-l", "/tmp/klippy.log", "/home/klipper/.config/printer.cfg"]
+     "-l", "/tmp/klippy.log", "/home/moonraker/printer_data/config/printer.cfg"]

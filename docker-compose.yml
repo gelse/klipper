@@ -10,11 +10,10 @@ services:
     restart: unless-stopped
     privileged: true
     volumes:
-      - ${CONFIG_PATH:-./klipper_config}:/home/klipper/.config:ro
-      - ${GCODE_PATH:-./gcode}:/home/klipper/gcodes
+      - ./moonraker_data/config:/home/moonraker/printer_data/config
+      - ${GCODE_PATH:-./gcode}:/home/moonraker/printer_data/gcodes
       - ${SOCKETS_PATH:-./sockets}:/tmp
-    devices:
-      - ${SERIAL_DEVICE:-/dev/null}:${SERIAL_DEVICE:-/dev/null}
+      - /dev/serial:/dev/serial
     environment:
       TZ: ${TZ:-UTC}
     logging:
@@ -32,7 +31,10 @@ services:
     restart: unless-stopped
     volumes:
       - ${MOONRAKER_DATA_PATH:-./moonraker_data}:/home/moonraker/printer_data
+      - ${GCODE_PATH:-./gcode}:/home/moonraker/printer_data/gcodes
       - ${SOCKETS_PATH:-./sockets}:/tmp
+      - ./config:/opt/klipper/config:ro
+      - ./docs:/opt/klipper/docs:ro
     ports:
       - "7125:7125"
     environment:
