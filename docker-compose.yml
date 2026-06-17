@@ -64,6 +64,8 @@ services:
       traefik.http.routers.fluidd.entrypoints: "http"
       traefik.http.routers.fluidd.rule: "Host(`sv06`) || Host(`sv06.gelse.local`)"
       traefik.http.routers.fluidd.service: "fluidd"
+      traefik.http.routers.fluidd.middlewares: "fluidd-maxbody"
+      traefik.http.middlewares.fluidd-maxbody.buffering.maxRequestBodyBytes: "100000000"
       traefik.http.services.fluidd.loadbalancer.server.port: "80"
     networks:
       - default
